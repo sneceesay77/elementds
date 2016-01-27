@@ -1,0 +1,4 @@
+protocol PurchaseMQ
+key rid qid
+RFQ rid out item out 
+Quote rid in item in qid out price out

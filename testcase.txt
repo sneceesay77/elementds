@@ -1,0 +1,79 @@
+=======================================================
+protocol Purchase
+key id
+RFQ id out item out 
+Quote id in item in price out
+
+------------------------------------------------------
+For protocol Purchase, message instances insertion attempts 
+with results. 
+------------------------------------------------------
+For convenience, I'll write message paramater values in the 
+same order as in the message schema specification. (Doing so 
+saves me making each parameter explicit in the message instances.)
+
+<ANY> represents any arbitrary state of the database.
+
+<m_0,m_1,...,m_n> + m_a represents an attempt to insert message m_a into a database that already has the messages m_0,m_1,...,m_n.
+
+Below are some test cases.
+
+<ANY> + RFQ(96): FAILS because item, which a not a nil parameter, is not bound.
+
+<ANY> + RFQ(96,phone) SUCCESS
+
+<RFQ(96,phone)> + RFQ(96,phone) FAIL because duplicate.
+
+<RFQ(96,phone)> + RFQ(97,phone) SUCCEEDS.
+
+<RFQ(96,phone)> + Quote(97,phone,$100) SUCCEEDS (WHY?)
+
+<RFQ(96,phone)> + Quote(96,pen,$100) FAILS integrity: the key id with value 96 is bound to phone as an item.
+
+<ANY> + requestForQuotes<96, phone> FAILS because no message schema with such a name exists.
+
+<RFQ(96,phone), Quote(97,phone,$100)> + RFQ(97,phone) SUCCEEDS (WHY?)
+
+<RFQ(96,phone), Quote(97,phone,$100)> + RFQ(97,pen) FAILS. why (there must have been another RFQ(97, phone))
+
+============================END==============================
+
+
+=======================================================
+protocol PurchaseMQ
+key rid qid
+RFQ rid out item out 
+Quote rid in item in qid out price out
+
+------------------------------------------------------
+For protocol PurchaseMQ, message instances insertion attempts 
+with results. 
+------------------------------------------------------
+
+<RFQ(r-96,phone)> + Quote<r-96,q-96,phone,$100> SUCCEEDS
+
+<RFQ(r-96,phone)> + Quote<r-96,q-97,phone,$100> SUCCEEDS
+
+<RFQ(r-96,phone)> + Quote<r-96,q-97,pen,$100> FAILS
+
+<RFQ(r-96,phone), Quote<r-96,q-1,phone,$100> + Quote<r-96,q-2,phone,$100> SUCCEEDS
+
+<RFQ(r-96,phone), Quote<r-96,q-1,phone,$100> + Quote<r-96,q-2,phone,$200> SUCCEEDS
+
+<RFQ(r-96,phone), Quote<r-96,q-1,phone,$100> + Quote<r-96,q-1,phone,$200> FAILS
+
+
+=====================END=================================
+
+RFQ rid 1 item phone
+RFQ rid 2 item ball
+
+Quote rid 1 qid 1 item phone price 100
+Quote rid 1 qid 2 item phone price 90
+
+Quote rid 2 qid 1 item ball price 20
+
+ 
+
+
+

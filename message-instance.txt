@@ -1,0 +1,11 @@
+RFQ id 0 item computer comment accepted
+QUOTE id 0 item computer price 200
+RFQ id 1 item umbrella
+QUOTE id 1 item cake price 200
+requestForQuote id 1 item umbrella
+RFQ id 2
+RFQ id 96 item phone
+Quote id 96 item pen price 100
+RFQ id 98 item phone
+Quote id 99 item phone price 100
+RFQ id 99 item pen

@@ -1,0 +1,4 @@
+protocol Purchase
+key id
+RFQ id out item out comment nil 
+Quote id in item in price out
