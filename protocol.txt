@@ -1,4 +1,4 @@
 protocol Purchase
-key id
-RFQ id out item out comment nil 
-Quote id in item in price out
+key rid
+RFQ rid out item out comment nil 
+Quote rid in item in price out
