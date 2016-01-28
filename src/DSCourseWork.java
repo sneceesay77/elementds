@@ -35,9 +35,9 @@ public class DSCourseWork {
 			System.exit(0);
 		}
 		printLog("Success","Created and Connected to Database "+database+" Successfully");
-		cw.setupDBandTables("protocol.txt", c);
+		cw.setupDBandTables("protocol2.txt", c);
 		printLog("Info", "===============================================\nInsertion of Messages started");
-		cw.insertMessages("message-instance.txt", c);
+		cw.insertMessages("message-instance2.txt", c);
 	}
 	
 	public static void printLog(String logType, String log) {
@@ -138,14 +138,14 @@ public class DSCourseWork {
 					
 					try {
 							
-							if(cnt == 0){
+							if(cnt == 0 || keys.size() == 1){
 								sql = CREATE_TABLE + " ( "
 										+ createTable.toString().substring(0, createTable.length() - 2)
 										+ ");";
 								cnt++;
-							}else{
-								createTable.append("PRIMARY KEY (qid,rid)");
-								
+							}else if(cnt > 0 && keys.size() > 1){
+								createTable.append("PRIMARY KEY ("+keys.get(1)+","+keys.get(0)+"),");
+								System.out.println("Coool"+createTable);
 								sql = CREATE_TABLE + " ( "
 										+ createTable.toString().substring(0, createTable.length() - 2)
 										+ "));";
