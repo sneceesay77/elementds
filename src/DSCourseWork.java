@@ -1,5 +1,4 @@
 import java.sql.Statement;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
@@ -80,6 +79,7 @@ public class DSCourseWork {
 			in = new Scanner(new File(fileName));
 			int itrCount = 0;
 			int linecount = 0;
+			int cnt = 0;
 			while (in.hasNextLine()) {
 
 				String line = in.nextLine();
@@ -97,8 +97,8 @@ public class DSCourseWork {
 					}
 				}
 				
-				//In protocol.txt file, all declarations starting with upper-case 
-				//letters and are found the key declarations represents table names 
+				//In protocol.txt file, all declarations starting with Schema definition 
+				//starts at the third line
 				if (linecount > 1) {
 					schemaList.add(tokens[0]);
 					//printLog("Debug", keys.size()+"");
@@ -115,7 +115,7 @@ public class DSCourseWork {
 					}else if(keys.size() > 1 && itrCount > 0){
 						System.out.println("Here 1");
 						//Second iteration get first and second
-						createTable.append(keys.get(1)+" TEXT PRIMARY KEY NOT NULL,").append(keys.get(0) + " TEXT  NOT NULL,\n");
+						createTable.append(keys.get(1)+" TEXT NOT NULL,").append(keys.get(0) + " TEXT  NOT NULL,");
 						//increment to get the id for next id of next table. 
 						//Order of id list and Message declaration has to be the same.
 					}
@@ -133,14 +133,26 @@ public class DSCourseWork {
 							}
 						}
 					}
+					
+					
+					
 					try {
-						// Using substring remove , and \n at the end of the
-						// string
-						sql = CREATE_TABLE + " ( "
-								+ createTable.toString().substring(0, createTable.length() - 2)
-								+ ");";
-
-						
+							
+							if(cnt == 0){
+								sql = CREATE_TABLE + " ( "
+										+ createTable.toString().substring(0, createTable.length() - 2)
+										+ ");";
+								cnt++;
+							}else{
+								createTable.append("PRIMARY KEY (qid,rid)");
+								
+								sql = CREATE_TABLE + " ( "
+										+ createTable.toString().substring(0, createTable.length() - 2)
+										+ "));";
+								//System.out.println(sql);
+								
+							}
+							
 						st = cn.createStatement();
 						st.executeUpdate(sql);
 						printLog("SQL", sql.replace("\n", ""));
@@ -150,9 +162,9 @@ public class DSCourseWork {
 								+ e.getMessage());
 						System.exit(0);
 					}
-					linecount++;
+					
 				}
-				
+				linecount++;
 				
 
 			} // end while
@@ -206,7 +218,6 @@ public class DSCourseWork {
 				 /**
 				  * If line or message is a quote, then query the RFQ table to verify its mapping
 				  * */
-				 System.out.println(sql);
 				 if(tokens[0].equalsIgnoreCase("Quote")){ 
 					 String sqlQuery = "SELECT item FROM RFQ WHERE rid = '"+currId+"'";
 					 st = ct.createStatement();

@@ -1,2 +1,5 @@
 RFQ rid 1 item phone
 RFQ rid 2 item ball
+Quote rid 1 qid 1 item phone price 100
+Quote rid 1 qid 2 item phone price 90
+Quote rid 2 qid 1 item ball price 20
